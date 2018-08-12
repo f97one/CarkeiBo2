@@ -1,8 +1,8 @@
 package net.formula97.andorid.car_kei_bo;
 
-import android.app.Activity;
 import android.database.sqlite.SQLiteDatabase;
 import android.os.Bundle;
+import android.support.v7.app.AppCompatActivity;
 import android.text.SpannableStringBuilder;
 import android.util.Log;
 import android.view.View;
@@ -19,7 +19,7 @@ import android.widget.Toast;
  * @author kazutoshi
  *
  */
-public class AddMyCar extends Activity implements OnItemSelectedListener {
+public class AddMyCar extends AppCompatActivity implements OnItemSelectedListener {
 
 	private DbManager dbman = new DbManager(this);
 	public static SQLiteDatabase db;

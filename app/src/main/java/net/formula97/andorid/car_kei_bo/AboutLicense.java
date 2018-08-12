@@ -3,14 +3,14 @@
  */
 package net.formula97.andorid.car_kei_bo;
 
-import android.app.Activity;
 import android.os.Bundle;
+import android.support.v7.app.AppCompatActivity;
 
 /**
  * @author kazutoshi
  *
  */
-public class AboutLicense extends Activity {
+public class AboutLicense extends AppCompatActivity {
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {

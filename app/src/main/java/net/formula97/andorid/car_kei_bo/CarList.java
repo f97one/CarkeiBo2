@@ -16,6 +16,7 @@ import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.os.Bundle;
 import android.os.Environment;
+import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.ContextMenu;
 import android.view.ContextMenu.ContextMenuInfo;
@@ -39,7 +40,7 @@ import android.widget.Toast;
  * クルマリストを表示するActivity
  * @author kazutoshi
  */
-public class CarList extends Activity implements OnClickListener {
+public class CarList extends AppCompatActivity implements OnClickListener {
 
 	private DbManager dbman = new DbManager(this);
 	public static SQLiteDatabase db;

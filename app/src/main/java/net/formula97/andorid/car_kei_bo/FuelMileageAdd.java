@@ -20,6 +20,7 @@ import android.database.sqlite.SQLiteDatabase;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.provider.Settings;
+import android.support.v7.app.AppCompatActivity;
 import android.text.SpannableStringBuilder;
 import android.util.Log;
 import android.view.View;
@@ -38,7 +39,7 @@ import android.widget.Toast;
  * @author kazutoshi
  *
  */
-public class FuelMileageAdd extends Activity implements OnClickListener {
+public class FuelMileageAdd extends AppCompatActivity implements OnClickListener {
 
 	// ウィジェット類の宣言
 	Spinner spinner_carName;

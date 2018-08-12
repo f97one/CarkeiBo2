@@ -14,6 +14,7 @@ import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
+import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.ContextMenu;
 import android.view.ContextMenu.ContextMenuInfo;
@@ -38,7 +39,7 @@ import android.widget.Toast;
  * @author kazutoshi
  *
  */
-public class MileageList extends Activity implements OnClickListener {
+public class MileageList extends AppCompatActivity implements OnClickListener {
 
 	private int CAR_ID;
 	private String CAR_NAME;
