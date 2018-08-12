@@ -8,7 +8,6 @@ import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
 
-import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
@@ -40,7 +39,7 @@ import android.widget.Toast;
  * クルマリストを表示するActivity
  * @author kazutoshi
  */
-public class CarList extends AppCompatActivity implements OnClickListener {
+public class CarListActivity extends AppCompatActivity implements OnClickListener {
 
 	private DbManager dbman = new DbManager(this);
 	public static SQLiteDatabase db;
@@ -88,7 +87,7 @@ public class CarList extends AppCompatActivity implements OnClickListener {
 	 *   Activityの場合、onCreate()がコンストラクタの役割を果たすので、
 	 *   特に処理を書かなくても成立する。
 	 */
-	public CarList() {
+	public CarListActivity() {
 	}
 
 	/**
@@ -144,8 +143,8 @@ public class CarList extends AppCompatActivity implements OnClickListener {
 
 		// 別画面呼び出しのためのインテント宣言
 		Intent configActivity = new Intent(this, Config.class); // 設定画面
-		Intent addCarActivity = new Intent(this, AddMyCar.class); // 「クルマを追加」画面
-		Intent carListActivity = new Intent(this, CarList.class); // 「クルマリスト」画面
+		Intent addCarActivity = new Intent(this, AddMyCarActivity.class); // 「クルマを追加」画面
+		Intent carListActivity = new Intent(this, CarListActivity.class); // 「クルマリスト」画面
 
 		switch (item.getItemId()) {
 		case R.id.optionsmenu_closeAPP:
@@ -407,7 +406,7 @@ public class CarList extends AppCompatActivity implements OnClickListener {
 		Log.d(getResources().toString(), "CAR_NAME : " + carName);
 
 		// 取得したCAR_IDとCAR_NAMEを引数にセットしてstartActivity
-		Intent i = new Intent(getApplicationContext(), MileageList.class);
+		Intent i = new Intent(getApplicationContext(), MileageListActivity.class);
 		i.putExtra("CAR_ID", carId);
 		i.putExtra("CAR_NAME", carName);
 		startActivity(i);
@@ -424,7 +423,7 @@ public class CarList extends AppCompatActivity implements OnClickListener {
 		closeDbAndCursorIfOpen();
 
 		// 取得したCAR_IDとCAR_NAMEを引数にセットしてstartActivity
-		Intent i = new Intent(getApplicationContext(), FuelMileageAdd.class);
+		Intent i = new Intent(getApplicationContext(), FuelMileageAddActivity.class);
 		i.putExtra("CAR_ID", carId);
 		i.putExtra("CAR_NAME", carName);
 		startActivity(i);

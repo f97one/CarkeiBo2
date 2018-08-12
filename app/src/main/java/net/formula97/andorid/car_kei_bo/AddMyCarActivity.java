@@ -19,7 +19,7 @@ import android.widget.Toast;
  * @author kazutoshi
  *
  */
-public class AddMyCar extends AppCompatActivity implements OnItemSelectedListener {
+public class AddMyCarActivity extends AppCompatActivity implements OnItemSelectedListener {
 
 	private DbManager dbman = new DbManager(this);
 	public static SQLiteDatabase db;
@@ -136,7 +136,7 @@ public class AddMyCar extends AppCompatActivity implements OnItemSelectedListene
 		//   getText()はCaheSequence型になるので、Stringにキャストする
 		SpannableStringBuilder sp = (SpannableStringBuilder) textview_addCarName.getText();
 		carName = sp.toString();
-		Log.w("CarList", "New Car name = " + carName);
+		Log.w("CarListActivity", "New Car name = " + carName);
 
 		// チェックボックスの状態を取得
 		if (checkbox_setDefault.isChecked()) {

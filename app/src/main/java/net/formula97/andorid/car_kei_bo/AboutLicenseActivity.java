@@ -10,7 +10,7 @@ import android.support.v7.app.AppCompatActivity;
  * @author kazutoshi
  *
  */
-public class AboutLicense extends AppCompatActivity {
+public class AboutLicenseActivity extends AppCompatActivity {
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {

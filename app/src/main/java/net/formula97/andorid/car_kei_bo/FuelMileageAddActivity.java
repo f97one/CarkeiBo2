@@ -39,7 +39,7 @@ import android.widget.Toast;
  * @author kazutoshi
  *
  */
-public class FuelMileageAdd extends AppCompatActivity implements OnClickListener {
+public class FuelMileageAddActivity extends AppCompatActivity implements OnClickListener {
 
 	// ウィジェット類の宣言
 	Spinner spinner_carName;

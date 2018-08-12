@@ -27,7 +27,7 @@ import android.widget.Spinner;
  * @author kazutoshi
  *
  */
-public class ShowStats extends AppCompatActivity implements OnItemSelectedListener {
+public class ShowStatsActivity extends AppCompatActivity implements OnItemSelectedListener {
 
 	private double[][] statDaysRange;
 	private ArrayList<HashMap<String,String>> statData;

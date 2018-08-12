@@ -5,7 +5,6 @@ package net.formula97.andorid.car_kei_bo;
 
 import java.math.BigDecimal;
 
-import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
@@ -24,7 +23,6 @@ import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.AdapterView;
 import android.widget.AdapterView.AdapterContextMenuInfo;
-import android.widget.AdapterView.OnItemLongClickListener;
 import android.widget.Button;
 import android.widget.ListView;
 import android.widget.SimpleCursorAdapter;
@@ -39,7 +37,7 @@ import android.widget.Toast;
  * @author kazutoshi
  *
  */
-public class MileageList extends AppCompatActivity implements OnClickListener {
+public class MileageListActivity extends AppCompatActivity implements OnClickListener {
 
 	private int CAR_ID;
 	private String CAR_NAME;
@@ -78,7 +76,7 @@ public class MileageList extends AppCompatActivity implements OnClickListener {
 	/**
 	 *
 	 */
-	public MileageList() {
+	public MileageListActivity() {
 		// TODO 自動生成されたコンストラクター・スタブ
 	}
 
@@ -327,7 +325,7 @@ public class MileageList extends AppCompatActivity implements OnClickListener {
 			Log.d("onClick", "btn_add_mileage pressed.");
 
 			// 取得したCAR_IDとCAR_NAMEを引数にセットしてstartActivity
-			Intent addmileage = new Intent(getApplicationContext(), FuelMileageAdd.class);
+			Intent addmileage = new Intent(getApplicationContext(), FuelMileageAddActivity.class);
 			addmileage.putExtra("CAR_ID", getCAR_ID());
 			addmileage.putExtra("CAR_NAME", getCAR_NAME());
 			startActivity(addmileage);
@@ -335,7 +333,7 @@ public class MileageList extends AppCompatActivity implements OnClickListener {
 			break;
 		case R.id.btn_show_stats:
 			// 「統計を表示」ボタンを押した時の処理
-			Intent showstat = new Intent(getApplicationContext(), ShowStats.class);
+			Intent showstat = new Intent(getApplicationContext(), ShowStatsActivity.class);
 			showstat.putExtra("CAR_ID", getCAR_ID());
 			showstat.putExtra("CAR_NAME", getCAR_NAME());
 			startActivity(showstat);
@@ -518,7 +516,7 @@ public class MileageList extends AppCompatActivity implements OnClickListener {
 	 * @param carName String型、給油記録を修正するレコードのCAR_NAME
 	 */
 	private void callEditMileage(int recordId, int carId, String carName) {
-		Intent i = new Intent(getApplicationContext(), FuelMileageAdd.class);
+		Intent i = new Intent(getApplicationContext(), FuelMileageAddActivity.class);
 		i.putExtra("UPDATE_MODE", true);
 		i.putExtra("RECORD_ID", recordId);
 		i.putExtra("CAR_ID", carId);
