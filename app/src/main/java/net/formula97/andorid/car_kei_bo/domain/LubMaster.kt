@@ -5,7 +5,7 @@ import android.arch.persistence.room.Entity
 import android.arch.persistence.room.PrimaryKey
 import java.sql.Date
 
-@Entity
+@Entity(tableName = "CAR_MASTER")
 data class LubMaster(
         /**
          * PKとなるレコードの一意ID
