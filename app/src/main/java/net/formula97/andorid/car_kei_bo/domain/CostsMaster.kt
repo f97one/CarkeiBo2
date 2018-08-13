@@ -6,7 +6,7 @@ import android.arch.persistence.room.PrimaryKey
 import java.sql.Date
 
 @Entity
-data class CostMaster(
+data class CostsMaster(
         @PrimaryKey(autoGenerate = true)
         @ColumnInfo(name = "RECORD_ID")
         var recordId: Long,
