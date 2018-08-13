@@ -1,4 +1,4 @@
-package net.formula97.andorid.car_kei_bo.domain
+package net.formula97.andorid.car_kei_bo.repository
 
 import android.arch.persistence.room.Dao
 
