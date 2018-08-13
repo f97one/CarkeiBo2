@@ -6,6 +6,11 @@ android {
     compileSdkVersion 28
     buildToolsVersion "28.0.2"
 
+    // RoomのMigrationでスキーマを出力する先
+    sourceSets {
+        androidTest.assets.srcDirs += files("$projectDir/schemas".toString())
+    }
+
     defaultConfig {
         applicationId "net.formula97.andorid.car_kei_bo"
         minSdkVersion 15
@@ -13,6 +18,15 @@ android {
         versionCode 4
         versionName "0.7-p3"
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
+
+        // RoomのMigrationでスキーマを出力する先
+        javaCompileOptions {
+            annotationProcessorOptions {
+                arguments += ["room.schemaLocation":"$projectDir/schemas".toString()]
+                // app/schemas/${databaseクラスのFQDN}/$schemaVersion.json が生成されるようになる
+            }
+        }
+
     }
 
     signingConfigs {
@@ -36,6 +50,9 @@ android {
 }
 
 dependencies {
+    def room_version = "1.1.1"
+    def dagger2_version = "2.17"
+
     implementation 'com.android.support:appcompat-v7:28.0.0-rc01'
 
     testImplementation 'junit:junit:4.12'
@@ -45,7 +62,9 @@ dependencies {
 
     implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk7:$kotlin_version"
 
-    def room_version = "1.1.1"
+    // Dagger 2 DI
+    implementation "com.google.dagger:dagger:$dagger2_version"
+    kapt "com.google.dagger:dagger-compiler:$dagger2_version"
 
     implementation "android.arch.persistence.room:runtime:$room_version"
     kapt "android.arch.persistence.room:compiler:$room_version"
