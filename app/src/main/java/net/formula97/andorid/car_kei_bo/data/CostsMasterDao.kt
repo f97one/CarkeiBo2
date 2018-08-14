@@ -7,8 +7,8 @@ import android.arch.persistence.room.Query
 interface CostsMasterDao : BaseDao<CostsMaster> {
 
     @Query("SELECT * FROM COSTS_MASTER WHERE RECORD_ID = :id")
-    fun findById(id: Int)
+    fun findById(id: Int) : CostsMaster?
 
     @Query("SELECT * FROM COSTS_MASTER")
-    fun findAll()
+    fun findAll() : List<LubMaster>
 }

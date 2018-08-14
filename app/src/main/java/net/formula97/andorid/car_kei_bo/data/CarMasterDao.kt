@@ -6,8 +6,8 @@ import android.arch.persistence.room.*
 interface CarMasterDao : BaseDao<CarMaster> {
 
     @Query("SELECT * FROM CAR_MASTER WHERE CAR_ID = :id")
-    fun findById(id: Int)
+    fun findById(id: Int) : CarMaster?
 
     @Query("SELECT * FROM CAR_MASTER")
-    fun findAll()
+    fun findAll() : List<LubMaster>
 }
