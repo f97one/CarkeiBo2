@@ -142,7 +142,7 @@ public class CarListActivity extends AppCompatActivity implements OnClickListene
 		 */
 
 		// 別画面呼び出しのためのインテント宣言
-		Intent configActivity = new Intent(this, Config.class); // 設定画面
+		Intent configActivity = new Intent(this, ConfigActivity.class); // 設定画面
 		Intent addCarActivity = new Intent(this, AddMyCarActivity.class); // 「クルマを追加」画面
 		Intent carListActivity = new Intent(this, CarListActivity.class); // 「クルマリスト」画面
 

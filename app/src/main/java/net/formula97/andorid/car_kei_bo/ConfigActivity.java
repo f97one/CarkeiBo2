@@ -10,12 +10,12 @@ import android.preference.PreferenceActivity;
  * @author kazutoshi
  *
  */
-public class Config extends PreferenceActivity {
+public class ConfigActivity extends PreferenceActivity {
 
 	/**
 	 *
 	 */
-	public Config() {
+	public ConfigActivity() {
 		// TODO 自動生成されたコンストラクター・スタブ
 	}
 
