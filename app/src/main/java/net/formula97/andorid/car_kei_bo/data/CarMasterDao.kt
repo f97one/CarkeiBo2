@@ -1,8 +1,13 @@
 package net.formula97.andorid.car_kei_bo.data
 
-import android.arch.persistence.room.Dao
+import android.arch.persistence.room.*
 
 @Dao
-interface CarMasterDao {
+interface CarMasterDao : BaseDao<CarMaster> {
 
+    @Query("SELECT * FROM CAR_MASTER WHERE CAR_ID = :id")
+    fun findById(id: Int)
+
+    @Query("SELECT * FROM CAR_MASTER")
+    fun findAll()
 }
