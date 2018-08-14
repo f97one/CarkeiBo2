@@ -36,5 +36,5 @@ interface DataSource<T, P> {
     /**
      * プライマリキーでEntityを探す。
      */
-    fun findById(id: P)
+    fun findById(id: P) : T?
 }
