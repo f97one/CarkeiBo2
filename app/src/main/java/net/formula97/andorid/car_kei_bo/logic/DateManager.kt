@@ -1,4 +1,4 @@
-package net.formula97.andorid.car_kei_bo
+package net.formula97.andorid.car_kei_bo.logic
 
 import android.text.format.Time
 import android.util.Log

@@ -15,6 +15,8 @@ import android.database.sqlite.SQLiteOpenHelper;
 import android.text.TextUtils;
 import android.util.Log;
 
+import net.formula97.andorid.car_kei_bo.logic.DateManager;
+
 /**
  * @author kazutoshi
  *  DB操作関連メソッドを定義するクラス

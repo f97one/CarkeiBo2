@@ -29,6 +29,8 @@ import android.widget.SimpleCursorAdapter;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import net.formula97.andorid.car_kei_bo.logic.DateManager;
+
 /**
  * @author kazutoshi
  *
