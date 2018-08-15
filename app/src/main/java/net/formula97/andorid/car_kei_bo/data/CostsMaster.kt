@@ -9,9 +9,11 @@ import java.sql.Date
 data class CostsMaster(
         @PrimaryKey(autoGenerate = true)
         @ColumnInfo(name = "RECORD_ID")
-        var recordId: Long,
-        @ColumnInfo(name = "DATE")
-        var date: Date,
+        var recordId: Int,
+        @ColumnInfo(name = "CAR_ID")
+        var carId: Int,
+        @ColumnInfo(name = "REFUEL_DATE")
+        var refuelDouble: Double,
         @ColumnInfo(name = "RUNNING_COST")
         var runningCost: Double
 )
