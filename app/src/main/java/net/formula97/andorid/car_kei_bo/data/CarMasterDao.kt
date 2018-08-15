@@ -9,5 +9,5 @@ interface CarMasterDao : BaseDao<CarMaster> {
     fun findById(id: Int) : CarMaster?
 
     @Query("SELECT * FROM CAR_MASTER")
-    fun findAll() : List<LubMaster>
+    fun findAll() : List<CarMaster>
 }

@@ -10,5 +10,5 @@ interface CostsMasterDao : BaseDao<CostsMaster> {
     fun findById(id: Int) : CostsMaster?
 
     @Query("SELECT * FROM COSTS_MASTER")
-    fun findAll() : List<LubMaster>
+    fun findAll() : List<CostsMaster>
 }
