@@ -12,12 +12,12 @@ data class LubMaster(
          */
         @PrimaryKey(autoGenerate = true)
         @ColumnInfo(name = "RECORD_ID")
-        var recordId: Long,
+        var recordId: Int,
         /**
          * 作成された日時
          */
-        @ColumnInfo(name = "DATE")
-        var date: Date,
+        @ColumnInfo(name = "REFUEL_DATE")
+        var refuelDate: Date,
         /**
          * 記録が紐づくクルマのID
          */
@@ -36,8 +36,8 @@ data class LubMaster(
         /**
          * 給油時オドメーター値
          */
-        @ColumnInfo(name = "ODOMETER")
-        var odometer: Double,
+        @ColumnInfo(name = "TRIPMETER")
+        var tripMeter: Double,
         /**
          * コメント
          */

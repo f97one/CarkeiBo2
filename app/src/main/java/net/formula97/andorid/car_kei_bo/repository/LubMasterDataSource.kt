@@ -3,7 +3,7 @@ package net.formula97.andorid.car_kei_bo.repository
 import net.formula97.andorid.car_kei_bo.data.LubMaster
 import javax.inject.Inject
 
-class LubMasterDataSource @Inject constructor(private val appDatabase: AppDatabase) : DataSource<LubMaster, Long> {
+class LubMasterDataSource @Inject constructor(private val appDatabase: AppDatabase) : DataSource<LubMaster, Int> {
     override fun addItem(entity: LubMaster) {
         appDatabase.lubMasterDao().addItem(entity)
     }
@@ -28,7 +28,7 @@ class LubMasterDataSource @Inject constructor(private val appDatabase: AppDataba
         appDatabase.lubMasterDao().deleteItem(entity)
     }
 
-    override fun findById(id: Long): LubMaster? {
+    override fun findById(id: Int): LubMaster? {
         return appDatabase.lubMasterDao().findById(id)
     }
 }

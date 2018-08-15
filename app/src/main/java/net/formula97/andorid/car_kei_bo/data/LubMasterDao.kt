@@ -6,7 +6,7 @@ import android.arch.persistence.room.Query
 @Dao
 interface LubMasterDao : BaseDao<LubMaster> {
     @Query("SELECT * FROM LUB_MASTER WHERE RECORD_ID = :id")
-    fun findById(id: Long) : LubMaster?
+    fun findById(id: Int) : LubMaster?
 
     @Query("SELECT * FROM LUB_MASTER")
     fun findAll() : List<LubMaster>
