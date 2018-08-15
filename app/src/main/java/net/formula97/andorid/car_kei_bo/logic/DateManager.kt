@@ -37,7 +37,7 @@ class DateManager {
             dateFormat = "yyyy-MM-dd"
         }
 
-        val sdf = SimpleDateFormat(dateFormat)
+        val sdf = SimpleDateFormat(dateFormat, Locale.getDefault())
 
         // 整形済み日付をStringにして返す
         return sdf.format(dd).toString()
