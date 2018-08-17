@@ -4,6 +4,9 @@ import net.formula97.andorid.car_kei_bo.data.CostsMaster
 import javax.inject.Inject
 
 class CostsMasterDataSource @Inject constructor(private val appDatabase: AppDatabase) : DataSource<CostsMaster, Int> {
+    override fun hasRecord(): Boolean {
+        return appDatabase.costsMasterDao().findAll().isNotEmpty()
+    }
 
     override fun addItem(entity: CostsMaster) {
         appDatabase.costsMasterDao().addItem(entity)

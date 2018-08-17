@@ -5,6 +5,9 @@ import javax.inject.Inject
 
 class CarMasterDataSource @Inject
 constructor(private val appDatabase: AppDatabase) : DataSource<CarMaster, Int> {
+    override fun hasRecord(): Boolean {
+        return appDatabase.carMasterDao().findAll().isNotEmpty()
+    }
 
     override fun addItem(entity: CarMaster) {
         appDatabase.carMasterDao().addItem(entity)

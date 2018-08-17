@@ -4,6 +4,10 @@ import net.formula97.andorid.car_kei_bo.data.LubMaster
 import javax.inject.Inject
 
 class LubMasterDataSource @Inject constructor(private val appDatabase: AppDatabase) : DataSource<LubMaster, Int> {
+    override fun hasRecord(): Boolean {
+        return appDatabase.lubMasterDao().findAll().isNotEmpty()
+    }
+
     override fun addItem(entity: LubMaster) {
         appDatabase.lubMasterDao().addItem(entity)
     }

@@ -37,4 +37,9 @@ interface DataSource<T, P> {
      * プライマリキーでEntityを探す。
      */
     fun findById(id: P) : T?
+
+    /**
+     * レコードがあるかどうかを返す。
+     */
+    fun hasRecord() : Boolean
 }
