@@ -3,9 +3,12 @@ package net.formula97.andorid.car_kei_bo.data
 import android.arch.persistence.room.ColumnInfo
 import android.arch.persistence.room.Entity
 import android.arch.persistence.room.PrimaryKey
-import java.sql.Date
+import android.arch.persistence.room.TypeConverters
+import net.formula97.andorid.car_kei_bo.data.converter.AppTypeConverter
+import java.util.Date
 
 @Entity(tableName = "LUB_MASTER")
+@TypeConverters(value = [AppTypeConverter::class])
 data class LubMaster(
         /**
          * PKとなるレコードの一意ID
