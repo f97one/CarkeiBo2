@@ -1,4 +1,4 @@
-package net.formula97.andorid.car_kei_bo
+package net.formula97.andorid.car_kei_bo.di.modules
 
 import android.app.Application
 
