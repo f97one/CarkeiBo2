@@ -4,15 +4,10 @@ import android.app.Application
 import android.arch.persistence.db.SupportSQLiteDatabase
 import android.arch.persistence.room.Room
 import android.arch.persistence.room.migration.Migration
-
-import javax.inject.Singleton
-
 import dagger.Module
 import dagger.Provides
-import net.formula97.andorid.car_kei_bo.data.CarMasterDao
-import net.formula97.andorid.car_kei_bo.data.CostsMasterDao
-import net.formula97.andorid.car_kei_bo.data.LubMasterDao
 import net.formula97.andorid.car_kei_bo.repository.AppDatabase
+import javax.inject.Singleton
 
 @Module
 class AppModule(internal var application: Application) {
