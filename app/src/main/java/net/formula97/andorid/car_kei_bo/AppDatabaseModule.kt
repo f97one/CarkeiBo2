@@ -34,20 +34,20 @@ class AppDatabaseModule(application: Application) {
 
     @Provides
     @Singleton
-    fun providesCarMasterDao(appDatabase: AppDatabase): CarMasterDao {
-        return appDatabase.carMasterDao()
+    fun providesCarMasterDao(): CarMasterDao {
+        return this.appDatabase.carMasterDao()
     }
 
     @Provides
     @Singleton
-    fun providesCostsMasterDao(appDatabase: AppDatabase): CostsMasterDao {
-        return appDatabase.costsMasterDao()
+    fun providesCostsMasterDao(): CostsMasterDao {
+        return this.appDatabase.costsMasterDao()
     }
 
     @Provides
     @Singleton
-    fun providesLubMasterDao(appDatabase: AppDatabase): LubMasterDao {
-        return appDatabase.lubMasterDao()
+    fun providesLubMasterDao(): LubMasterDao {
+        return this.appDatabase.lubMasterDao()
     }
 
     companion object {
