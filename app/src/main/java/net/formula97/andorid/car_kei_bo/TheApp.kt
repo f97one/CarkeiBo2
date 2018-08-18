@@ -1,31 +1,26 @@
 package net.formula97.andorid.car_kei_bo
 
-import android.app.Activity
 import android.app.Application
-import android.support.v4.app.Fragment
-import dagger.android.AndroidInjector
-import dagger.android.DispatchingAndroidInjector
-import dagger.android.HasActivityInjector
-import dagger.android.support.HasSupportFragmentInjector
-import javax.inject.Inject
+import android.arch.persistence.room.Room
+import net.formula97.andorid.car_kei_bo.repository.AppDatabase
 
-class TheApp : Application(), HasActivityInjector, HasSupportFragmentInjector {
+class TheApp : Application() {
 
-    @Inject
-    lateinit var dispatchingActivityInjector: DispatchingAndroidInjector<Activity>
-    @Inject
-    lateinit var dispatchingFragmentInjector: DispatchingAndroidInjector<Fragment>
-
-    override fun activityInjector(): AndroidInjector<Activity> {
-        return this.dispatchingActivityInjector
-    }
-
-    override fun supportFragmentInjector(): AndroidInjector<Fragment> {
-        return this.dispatchingFragmentInjector
-    }
+    lateinit var appDatabase: AppDatabase
 
     override fun onCreate() {
         super.onCreate()
-//        DaggerAppComponent.builder().application(this).build().inject(this)
+
+        // Room の初期化
+        appDatabase = Room.databaseBuilder(applicationContext, AppDatabase::class.java, AppDatabase.DATABASE_FILENAME)
+                .addMigrations(AppDatabase.MIGRATION_1_2)
+                .build()
+    }
+
+    /**
+     * ローカルデータソースとしてSQLite Databaseを取得する。
+     */
+    fun getLocalDatasource() : AppDatabase {
+        return this.appDatabase
     }
 }
