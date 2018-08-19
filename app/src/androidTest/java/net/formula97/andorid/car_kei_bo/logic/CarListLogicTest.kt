@@ -5,8 +5,7 @@ import android.support.test.InstrumentationRegistry
 import android.support.test.runner.AndroidJUnit4
 import net.formula97.andorid.car_kei_bo.data.CarMaster
 import net.formula97.andorid.car_kei_bo.repository.AppDatabase
-import org.hamcrest.Matchers.`is`
-import org.hamcrest.Matchers.notNullValue
+import org.hamcrest.Matchers.*
 import org.junit.After
 import org.junit.Assert.assertThat
 import org.junit.Assert.assertTrue
@@ -21,13 +20,13 @@ class CarListLogicTest {
 
     private val fixture1 = CarMaster(
             carId = 1, carName = "Car1", currentFuelMileage = 0.0, currentRunningCost = 0.0,
-            defaultFlag = false, distanceUnit = "km", fuelMileageLabel = "km", priceUnit = "円",
-            runningCostLabel = "円", volumeUnit = "l"
+            defaultFlag = false, distanceUnit = "km", fuelMileageLabel = "km/l", priceUnit = "円",
+            runningCostLabel = "円/km", volumeUnit = "l"
     )
     private val fixture2 = CarMaster(
             carId = 3, carName = "Car2", currentFuelMileage = 35.5, currentRunningCost = 11.3,
-            defaultFlag = true, distanceUnit = "ML", fuelMileageLabel = "ML", priceUnit = "USD.",
-            runningCostLabel = "USD.", volumeUnit = "Gal."
+            defaultFlag = true, distanceUnit = "ML", fuelMileageLabel = "ML/Gal", priceUnit = "USD.",
+            runningCostLabel = "USD./ML", volumeUnit = "Gal."
     )
 
     @Before
@@ -114,5 +113,61 @@ class CarListLogicTest {
         assertTrue("二つ目のFixtureとひとしい", i1 == fixture2)
         val i2 = items[1]
         assertTrue("一つ目のFixtureにひとしい", i2 == fixture1)
+    }
+
+    /**
+     * デフォルトフラグありのクルマが取得できる（正常ケース）
+     */
+    @Test
+    fun testN0004() {
+        val logic = CarListLogic(appDb!!)
+
+        val item = logic.findForDefault()
+
+        assertThat("nullではない", item, `is`(notNullValue()))
+        assertTrue("二つ目のFixtureにひとしい", item == fixture2)
+    }
+
+    /**
+     * デフォルトフラグありのレコードがないときにnullが返る
+     */
+    @Test
+    fun testN0005() {
+        val carMasterDao = appDb!!.carMasterDao()
+        // デフォルトフラグを下げる
+        val fixture2dash = fixture2.clone() as CarMaster
+        fixture2dash.defaultFlag = false
+        carMasterDao.updateItem(fixture2dash)
+
+        val logic = CarListLogic(appDb!!)
+
+        val item = logic.findForDefault()
+
+        assertThat("nullである", item, `is`(nullValue()))
+
+    }
+
+    /**
+     * デフォルトフラグありのレコードが2以上ある場合若いIDのレコードが返る
+     */
+    @Test
+    fun testN0006() {
+        val carMasterDao = appDb!!.carMasterDao()
+
+        // デフォルトフラグありのレコードをfixtureより前のIDで追加
+        val f3 = CarMaster(
+                carId = 2, carName = "クルマ3", currentFuelMileage = 144.0, currentRunningCost = 12.8,
+                defaultFlag = true, distanceUnit = "km", fuelMileageLabel = "km/l", priceUnit = "円",
+                runningCostLabel = "円/km", volumeUnit = "l"
+        )
+        carMasterDao.addItem(f3)
+
+        val logic = CarListLogic(appDb!!)
+
+        val item = logic.findForDefault()
+
+        assertThat("nullではない", item, `is`(notNullValue()))
+        assertTrue("このメソッドで入れたFixtureにひとしい", item == f3)
+
     }
 }

@@ -10,4 +10,7 @@ interface CarMasterDao : BaseDao<CarMaster> {
 
     @Query("SELECT * FROM CAR_MASTER")
     fun findAll() : List<CarMaster>
+
+    @Query("SELECT * FROM CAR_MASTER WHERE DEFAULT_FLAG = 1 ORDER BY CAR_ID LIMIT 1")
+    fun findByDefault(): CarMaster?
 }
