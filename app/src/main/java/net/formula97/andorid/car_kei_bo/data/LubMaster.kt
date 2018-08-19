@@ -46,4 +46,8 @@ data class LubMaster(
          */
         @ColumnInfo(name = "COMMENTS")
         var comments: String
-)
+) : Cloneable {
+        public override fun clone(): Any {
+                return super.clone()
+        }
+}

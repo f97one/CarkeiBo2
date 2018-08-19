@@ -27,4 +27,8 @@ data class CarMaster(
         var fuelMileageLabel: String,
         @ColumnInfo(name = "RUNNINGCOST_LABEL")
         var runningCostLabel: String
-)
+) : Cloneable {
+        public override fun clone(): Any {
+                return super.clone()
+        }
+}

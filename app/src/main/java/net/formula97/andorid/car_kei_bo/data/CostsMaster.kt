@@ -16,4 +16,8 @@ data class CostsMaster(
         var refuelDouble: Double,
         @ColumnInfo(name = "RUNNING_COST")
         var runningCost: Double
-)
+) : Cloneable {
+        public override fun clone(): Any {
+                return super.clone()
+        }
+}
