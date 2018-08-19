@@ -1,5 +1,6 @@
 package net.formula97.andorid.car_kei_bo.logic
 
+import android.arch.persistence.room.Transaction
 import net.formula97.andorid.car_kei_bo.data.CarMaster
 import net.formula97.andorid.car_kei_bo.repository.AppDatabase
 
@@ -28,5 +29,25 @@ class CarListLogic(appDatabase: AppDatabase) : BaseAppLogic(appDatabase) {
      */
     fun findForDefault(): CarMaster? {
         return appDatabase.carMasterDao().findByDefault()
+    }
+
+    /**
+     * デフォルトフラグを変更する。
+     *
+     * @param id デフォルトフラグを立てるクルマのID
+     */
+    @Transaction
+    fun changeDefault(id : Int) {
+        // いったん全部フラグを下ろし、指定番号に対してフラグを立てる
+        val carMasterDao = appDatabase.carMasterDao()
+
+        val targetItem = carMasterDao.findById(id)
+        if (targetItem == null) {
+            throw IllegalArgumentException("Can't find record by specified CAR_ID = $id")
+        } else {
+            carMasterDao.decreaseDefault()
+            targetItem.defaultFlag = true
+            carMasterDao.updateItem(targetItem)
+        }
     }
 }

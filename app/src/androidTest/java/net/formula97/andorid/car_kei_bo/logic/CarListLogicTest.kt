@@ -7,8 +7,7 @@ import net.formula97.andorid.car_kei_bo.data.CarMaster
 import net.formula97.andorid.car_kei_bo.repository.AppDatabase
 import org.hamcrest.Matchers.*
 import org.junit.After
-import org.junit.Assert.assertThat
-import org.junit.Assert.assertTrue
+import org.junit.Assert.*
 import org.junit.Before
 import org.junit.Test
 import org.junit.runner.RunWith
@@ -48,7 +47,7 @@ class CarListLogicTest {
         val carMasterDao = appDb?.carMasterDao()
 
         if (carMasterDao != null) {
-            val items: List<CarMaster> = carMasterDao.findAll() ?: ArrayList()
+            val items: List<CarMaster> = carMasterDao.findAll()
 
             for (i in items) {
                 carMasterDao.deleteItem(i)
@@ -169,5 +168,33 @@ class CarListLogicTest {
         assertThat("nullではない", item, `is`(notNullValue()))
         assertTrue("このメソッドで入れたFixtureにひとしい", item == f3)
 
+    }
+
+    /**
+     * デフォルトフラグを指定IDに切り替えるテスト
+     */
+    @Test
+    fun testN0007() {
+        val logic = CarListLogic(appDb!!)
+        logic.changeDefault(1)
+
+        val resultItem = appDb!!.carMasterDao().findById(1)
+        assertTrue("デフォルトフラグがID = 1に立っている", resultItem!!.defaultFlag)
+    }
+
+    /**
+     * ないレコードのデフォルトフラグを操作しようとした場合IllegalArgumentExceptionが投げられる
+     */
+    @Test
+    fun testN0008() {
+        try {
+            val logic = CarListLogic(appDb!!)
+            logic.changeDefault(5)
+
+            fail("例外は投げられなかった")
+        } catch (e: Exception) {
+            assertThat("IllegalArgumentExceptionが投げられる", e, `is`(instanceOf(IllegalArgumentException::class.java)))
+            assertThat(e.message, `is`("Can't find record by specified CAR_ID = 5"))
+        }
     }
 }
