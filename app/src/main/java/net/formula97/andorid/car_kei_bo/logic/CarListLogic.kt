@@ -50,4 +50,21 @@ class CarListLogic(appDatabase: AppDatabase) : BaseAppLogic(appDatabase) {
             carMasterDao.updateItem(targetItem)
         }
     }
+
+    /**
+     * クルマの記録を消去する。
+     *
+     * @param id 消去対象のクルマのID
+     */
+    @Transaction
+    fun deleteCarMileage(id: Int) {
+        appDatabase.costsMasterDao().deleteCostsByCar(id)
+        appDatabase.lubMasterDao().deleteLubByCar(id)
+
+        val carMasterDao = appDatabase.carMasterDao()
+        val carMaster = carMasterDao.findById(id)
+        if (carMaster != null) {
+            carMasterDao.deleteItem(carMaster)
+        }
+    }
 }

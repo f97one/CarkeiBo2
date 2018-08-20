@@ -11,4 +11,7 @@ interface CostsMasterDao : BaseDao<CostsMaster> {
 
     @Query("SELECT * FROM COSTS_MASTER")
     fun findAll() : List<CostsMaster>
+
+    @Query("DELETE FROM COSTS_MASTER WHERE CAR_ID = :carId")
+    fun deleteCostsByCar(carId: Int)
 }

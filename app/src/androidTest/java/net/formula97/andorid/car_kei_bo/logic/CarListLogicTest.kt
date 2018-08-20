@@ -4,14 +4,16 @@ import android.arch.persistence.room.Room
 import android.support.test.InstrumentationRegistry
 import android.support.test.runner.AndroidJUnit4
 import net.formula97.andorid.car_kei_bo.data.CarMaster
+import net.formula97.andorid.car_kei_bo.data.CostsMaster
+import net.formula97.andorid.car_kei_bo.data.LubMaster
 import net.formula97.andorid.car_kei_bo.repository.AppDatabase
 import org.hamcrest.Matchers.*
 import org.junit.After
 import org.junit.Assert.*
 import org.junit.Before
-import org.junit.Ignore
 import org.junit.Test
 import org.junit.runner.RunWith
+import java.util.*
 
 @RunWith(AndroidJUnit4::class)
 class CarListLogicTest {
@@ -45,9 +47,22 @@ class CarListLogicTest {
         val carMasterDao = appDb.carMasterDao()
 
         val items: List<CarMaster> = carMasterDao.findAll()
-
         for (i in items) {
             carMasterDao.deleteItem(i)
+        }
+
+        val lubMasterDao = appDb.lubMasterDao()
+
+        val lubMasters = lubMasterDao.findAll()
+        for (i in lubMasters) {
+            lubMasterDao.deleteItem(i)
+        }
+
+        val costsMasterDao = appDb.costsMasterDao()
+
+        val costsMasters = costsMasterDao.findAll()
+        for (i in costsMasters) {
+            costsMasterDao.deleteItem(i)
         }
     }
 
@@ -193,11 +208,52 @@ class CarListLogicTest {
     }
 
     /**
-     *
+     * クルマの燃費記録を消去する
      */
-    @Ignore
     @Test
     fun testN0009() {
+        val lm11 = LubMaster(
+                recordId = 1, carId = 1, refuelDate = Date(), unitPrice = 125.0, lubAmount = 35.0,
+                tripMeter = 350.0, comments = ""
+        )
+        val lm12 = LubMaster(
+                recordId = 2, carId = 1, refuelDate = Date(), unitPrice = 126.0, lubAmount = 36.0,
+                tripMeter = 360.0, comments = ""
+        )
+        val lm31 = LubMaster(
+                recordId = 3, carId = 3, refuelDate = Date(), unitPrice = 127.0, lubAmount = 37.0,
+                tripMeter = 370.0, comments = ""
+        )
+        val lubMasterDao = appDb.lubMasterDao()
+        lubMasterDao.addItem(lm11)
+        lubMasterDao.addItem(lm12)
+        lubMasterDao.addItem(lm31)
 
+        val cost11 = CostsMaster(
+                recordId = 1, carId = 1, refuelDate = Date(), runningCost = 11.5
+        )
+        val cost12 = CostsMaster(
+                recordId = 2, carId = 1, refuelDate = Date(), runningCost = 11.6
+        )
+        val cost31 = CostsMaster(
+                recordId = 3, carId = 3, refuelDate = Date(), runningCost = 11.7
+        )
+        val costsMasterDao = appDb.costsMasterDao()
+        costsMasterDao.addItem(cost11)
+        costsMasterDao.addItem(cost12)
+        costsMasterDao.addItem(cost31)
+
+        val logic = CarListLogic(appDb)
+        logic.deleteCarMileage(1)
+
+        // レコード数の減少で検査
+        val carMasters = appDb.carMasterDao().findAll()
+        assertThat(carMasters.size, `is`(1))
+
+        val lubMasters = lubMasterDao.findAll()
+        assertThat(lubMasters.size, `is`(1))
+
+        val costsMasters = costsMasterDao.findAll()
+        assertThat(costsMasters.size, `is`(1))
     }
 }

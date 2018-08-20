@@ -10,4 +10,7 @@ interface LubMasterDao : BaseDao<LubMaster> {
 
     @Query("SELECT * FROM LUB_MASTER")
     fun findAll() : List<LubMaster>
+
+    @Query("DELETE FROM LUB_MASTER WHERE CAR_ID = :carId")
+    fun deleteLubByCar(carId: Int)
 }

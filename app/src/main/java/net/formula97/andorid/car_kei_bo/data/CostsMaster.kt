@@ -3,9 +3,12 @@ package net.formula97.andorid.car_kei_bo.data
 import android.arch.persistence.room.ColumnInfo
 import android.arch.persistence.room.Entity
 import android.arch.persistence.room.PrimaryKey
-import java.sql.Date
+import android.arch.persistence.room.TypeConverters
+import net.formula97.andorid.car_kei_bo.data.converter.AppTypeConverter
+import java.util.*
 
 @Entity(tableName = "COSTS_MASTER")
+@TypeConverters(value = [AppTypeConverter::class])
 data class CostsMaster(
         @PrimaryKey(autoGenerate = true)
         @ColumnInfo(name = "RECORD_ID")
@@ -13,7 +16,7 @@ data class CostsMaster(
         @ColumnInfo(name = "CAR_ID")
         var carId: Int,
         @ColumnInfo(name = "REFUEL_DATE")
-        var refuelDouble: Double,
+        var refuelDate: Date,
         @ColumnInfo(name = "RUNNING_COST")
         var runningCost: Double
 ) : Cloneable {
