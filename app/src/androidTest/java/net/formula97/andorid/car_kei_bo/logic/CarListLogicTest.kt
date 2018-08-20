@@ -9,13 +9,17 @@ import org.hamcrest.Matchers.*
 import org.junit.After
 import org.junit.Assert.*
 import org.junit.Before
+import org.junit.Ignore
 import org.junit.Test
 import org.junit.runner.RunWith
 
 @RunWith(AndroidJUnit4::class)
 class CarListLogicTest {
 
-    private var appDb: AppDatabase? = null
+    private val appDb: AppDatabase by lazy {
+        // in-memory dbで初期化
+        Room.inMemoryDatabaseBuilder(InstrumentationRegistry.getInstrumentation().targetContext, AppDatabase::class.java).build()
+    }
 
     private val fixture1 = CarMaster(
             carId = 1, carName = "Car1", currentFuelMileage = 0.0, currentRunningCost = 0.0,
@@ -30,28 +34,20 @@ class CarListLogicTest {
 
     @Before
     fun setUp() {
-        val context = InstrumentationRegistry.getInstrumentation().targetContext
-        appDb = Room.inMemoryDatabaseBuilder(context, AppDatabase::class.java).build()
+        val carMasterDao = appDb.carMasterDao()
 
-        if (appDb != null) {
-            // Fixtureを投入
-            val carMasterDao = appDb!!.carMasterDao()
-
-            carMasterDao.addItem(fixture1)
-            carMasterDao.addItem(fixture2)
-        }
+        carMasterDao.addItem(fixture1)
+        carMasterDao.addItem(fixture2)
     }
 
     @After
     fun tearDown() {
-        val carMasterDao = appDb?.carMasterDao()
+        val carMasterDao = appDb.carMasterDao()
 
-        if (carMasterDao != null) {
-            val items: List<CarMaster> = carMasterDao.findAll()
+        val items: List<CarMaster> = carMasterDao.findAll()
 
-            for (i in items) {
-                carMasterDao.deleteItem(i)
-            }
+        for (i in items) {
+            carMasterDao.deleteItem(i)
         }
     }
 
@@ -60,22 +56,20 @@ class CarListLogicTest {
      */
     @Test
     fun testN0001() {
-        val carMasterDao = appDb?.carMasterDao()
+        val carMasterDao = appDb.carMasterDao()
 
-        if (carMasterDao != null) {
-            // Fixtureをけす
-            val fixtures = carMasterDao.findAll()
-            for (f in fixtures) {
-                carMasterDao.deleteItem(f)
-            }
-
-            val logic = CarListLogic(appDb!!)
-
-            val items = logic.getCarList()
-
-            assertThat("nullではない", items, `is`(notNullValue()))
-            assertThat("サイズは0", items.size, `is`(0))
+        // Fixtureをけす
+        val fixtures = carMasterDao.findAll()
+        for (f in fixtures) {
+            carMasterDao.deleteItem(f)
         }
+
+        val logic = CarListLogic(appDb)
+
+        val items = logic.getCarList()
+
+        assertThat("nullではない", items, `is`(notNullValue()))
+        assertThat("サイズは0", items.size, `is`(0))
     }
 
     /**
@@ -83,7 +77,7 @@ class CarListLogicTest {
      */
     @Test
     fun testN0002() {
-        val logic = CarListLogic(appDb!!)
+        val logic = CarListLogic(appDb)
 
         val items = logic.getCarList()
 
@@ -101,7 +95,7 @@ class CarListLogicTest {
      */
     @Test
     fun testN0003() {
-        val logic = CarListLogic(appDb!!)
+        val logic = CarListLogic(appDb)
 
         val items = logic.getCarList(true)
 
@@ -119,7 +113,7 @@ class CarListLogicTest {
      */
     @Test
     fun testN0004() {
-        val logic = CarListLogic(appDb!!)
+        val logic = CarListLogic(appDb)
 
         val item = logic.findForDefault()
 
@@ -132,13 +126,13 @@ class CarListLogicTest {
      */
     @Test
     fun testN0005() {
-        val carMasterDao = appDb!!.carMasterDao()
+        val carMasterDao = appDb.carMasterDao()
         // デフォルトフラグを下げる
         val fixture2dash = fixture2.clone() as CarMaster
         fixture2dash.defaultFlag = false
         carMasterDao.updateItem(fixture2dash)
 
-        val logic = CarListLogic(appDb!!)
+        val logic = CarListLogic(appDb)
 
         val item = logic.findForDefault()
 
@@ -151,7 +145,7 @@ class CarListLogicTest {
      */
     @Test
     fun testN0006() {
-        val carMasterDao = appDb!!.carMasterDao()
+        val carMasterDao = appDb.carMasterDao()
 
         // デフォルトフラグありのレコードをfixtureより前のIDで追加
         val f3 = CarMaster(
@@ -161,7 +155,7 @@ class CarListLogicTest {
         )
         carMasterDao.addItem(f3)
 
-        val logic = CarListLogic(appDb!!)
+        val logic = CarListLogic(appDb)
 
         val item = logic.findForDefault()
 
@@ -175,10 +169,10 @@ class CarListLogicTest {
      */
     @Test
     fun testN0007() {
-        val logic = CarListLogic(appDb!!)
+        val logic = CarListLogic(appDb)
         logic.changeDefault(1)
 
-        val resultItem = appDb!!.carMasterDao().findById(1)
+        val resultItem = appDb.carMasterDao().findById(1)
         assertTrue("デフォルトフラグがID = 1に立っている", resultItem!!.defaultFlag)
     }
 
@@ -188,7 +182,7 @@ class CarListLogicTest {
     @Test
     fun testN0008() {
         try {
-            val logic = CarListLogic(appDb!!)
+            val logic = CarListLogic(appDb)
             logic.changeDefault(5)
 
             fail("例外は投げられなかった")
@@ -196,5 +190,14 @@ class CarListLogicTest {
             assertThat("IllegalArgumentExceptionが投げられる", e, `is`(instanceOf(IllegalArgumentException::class.java)))
             assertThat(e.message, `is`("Can't find record by specified CAR_ID = 5"))
         }
+    }
+
+    /**
+     *
+     */
+    @Ignore
+    @Test
+    fun testN0009() {
+
     }
 }
