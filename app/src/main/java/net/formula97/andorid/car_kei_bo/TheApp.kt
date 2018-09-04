@@ -6,7 +6,7 @@ import net.formula97.andorid.car_kei_bo.repository.AppDatabase
 
 class TheApp : Application() {
 
-    lateinit var appDatabase: AppDatabase
+    private lateinit var appDatabase: AppDatabase
 
     override fun onCreate() {
         super.onCreate()
