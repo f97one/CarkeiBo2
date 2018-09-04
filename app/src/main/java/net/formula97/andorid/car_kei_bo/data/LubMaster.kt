@@ -5,6 +5,7 @@ import android.arch.persistence.room.Entity
 import android.arch.persistence.room.PrimaryKey
 import android.arch.persistence.room.TypeConverters
 import net.formula97.andorid.car_kei_bo.data.converter.AppTypeConverter
+import java.io.Serializable
 import java.util.Date
 
 @Entity(tableName = "LUB_MASTER")
@@ -46,7 +47,7 @@ data class LubMaster(
          */
         @ColumnInfo(name = "COMMENTS")
         var comments: String
-) : Cloneable {
+) : Cloneable, Serializable {
         public override fun clone(): Any {
                 return super.clone()
         }

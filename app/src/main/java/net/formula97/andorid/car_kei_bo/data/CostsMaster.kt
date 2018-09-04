@@ -5,6 +5,7 @@ import android.arch.persistence.room.Entity
 import android.arch.persistence.room.PrimaryKey
 import android.arch.persistence.room.TypeConverters
 import net.formula97.andorid.car_kei_bo.data.converter.AppTypeConverter
+import java.io.Serializable
 import java.util.*
 
 @Entity(tableName = "COSTS_MASTER")
@@ -19,7 +20,7 @@ data class CostsMaster(
         var refuelDate: Date,
         @ColumnInfo(name = "RUNNING_COST")
         var runningCost: Double
-) : Cloneable {
+) : Cloneable, Serializable {
         public override fun clone(): Any {
                 return super.clone()
         }
