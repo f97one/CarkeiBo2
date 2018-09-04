@@ -14,6 +14,7 @@ class TheApp : Application() {
         // Room の初期化
         appDatabase = Room.databaseBuilder(applicationContext, AppDatabase::class.java, AppDatabase.DATABASE_FILENAME)
                 .addMigrations(AppDatabase.MIGRATION_1_2)
+                .allowMainThreadQueries()
                 .build()
     }
 
