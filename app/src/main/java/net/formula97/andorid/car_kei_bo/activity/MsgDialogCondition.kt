@@ -11,6 +11,10 @@ data class MsgDialogCondition(var messageResId: Int) : Serializable {
      */
     var titleResId: Int = Int.MIN_VALUE
     /**
+     * ダイアログタイトル文字列
+     */
+    var titleStr: String? = null
+    /**
      * アイコンのResId
      */
     var iconResId: Int = Int.MIN_VALUE

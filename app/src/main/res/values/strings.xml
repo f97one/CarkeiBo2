@@ -112,6 +112,8 @@
     <string name="specify_import_file">Specify file name to import :</string>
     <string name="specify_export_file">Specify file name to export :</string>
     <string name="title_activity_settings">Settings</string>
+    <string name="confirm_delete_car">Do you wish to delete this car from database?</string>
+    <string name="car_deleted">Car delete successfully.</string>
 
     <!-- Strings related to Settings -->
 

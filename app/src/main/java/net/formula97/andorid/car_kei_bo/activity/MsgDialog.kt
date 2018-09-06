@@ -69,7 +69,10 @@ class MsgDialog : DialogFragment() {
             builder.setIcon(args.iconResId)
         }
         // タイトル
-        if (args.titleResId != Int.MIN_VALUE) {
+        //   文字列 -> resId の順で評価
+        if (args.titleStr != null) {
+            builder.setTitle(args.titleStr)
+        } else if (args.titleResId != Int.MIN_VALUE) {
             builder.setTitle(args.titleResId)
         }
 

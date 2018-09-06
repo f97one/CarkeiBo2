@@ -93,5 +93,7 @@
 	<string name="toastmsg_addmileage11"> の燃費記録を修正しました。</string>
 	<string name="adbuilder_confirm_deletefuelrecord">この燃費記録をデータベースから削除しますか？</string>
 	<string name="adbuilder_toast_deletefuel"> の燃費記録を削除しました。</string>
+	<string name="confirm_delete_car">このクルマをデータベースから削除しますか？</string>
+	<string name="car_deleted">クルマは削除されました。</string>
 
 </resources>
