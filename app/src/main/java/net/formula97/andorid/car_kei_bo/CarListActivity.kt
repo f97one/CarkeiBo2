@@ -3,68 +3,39 @@
  */
 package net.formula97.andorid.car_kei_bo
 
-import java.io.BufferedWriter
-import java.io.File
-import java.io.FileWriter
-import java.io.IOException
-
 import android.app.AlertDialog
-import android.content.DialogInterface
 import android.content.Intent
 import android.database.Cursor
 import android.database.sqlite.SQLiteDatabase
 import android.os.Bundle
 import android.os.Environment
-import android.os.PersistableBundle
-import android.support.v7.app.AppCompatActivity
 import android.util.Log
-import android.view.ContextMenu
+import android.view.*
 import android.view.ContextMenu.ContextMenuInfo
-import android.view.LayoutInflater
-import android.view.Menu
-import android.view.MenuInflater
-import android.view.MenuItem
-import android.view.View
 import android.view.View.OnClickListener
-import android.widget.AdapterView
+import android.widget.*
 import android.widget.AdapterView.AdapterContextMenuInfo
-import android.widget.Button
-import android.widget.EditText
-import android.widget.ListView
-import android.widget.SimpleCursorAdapter
-import android.widget.TableLayout
-import android.widget.TextView
-import android.widget.Toast
 import net.formula97.andorid.car_kei_bo.activity.AbstractAppActivity
+import net.formula97.andorid.car_kei_bo.activity.MsgDialog
+import net.formula97.andorid.car_kei_bo.activity.MsgDialogCondition
 import net.formula97.andorid.car_kei_bo.data.CarMaster
 import net.formula97.andorid.car_kei_bo.logic.CarListLogic
 import net.formula97.andorid.car_kei_bo.view.adapter.CarListAdapter
+import java.io.BufferedWriter
+import java.io.File
+import java.io.FileWriter
+import java.io.IOException
 
 /**
  * クルマリストを表示するActivity
  * @author kazutoshi
  */
-/**
- * 明示的コンストラクタ
- * Activityの場合、onCreate()がコンストラクタの役割を果たすので、
- * 特に処理を書かなくても成立する。
- */
-class CarListActivity : AbstractAppActivity(), OnClickListener {
-
-    private val dbman = DbManager(this)
-
-    internal var cCarList: Cursor? = null
-    internal var selectedRow: Cursor? = null
+class CarListActivity : AbstractAppActivity() {
 
     // ウィジェットを扱うための定義
     internal var tv_label_value_defaultcar: TextView? =  null
-    internal var TableLayout1: TableLayout? = null
     internal var listView_CarList: ListView? = null
     internal var button_addFuelRecord: Button? = null
-
-    // DBから取得したデフォルト値を格納する変数
-    private var defaultCarID: Int = 0
-    private var defaultCarName: String? = null
 
     // ListViewのカレント値を格納する変数
     private var currentCarID: Int = 0
@@ -74,7 +45,10 @@ class CarListActivity : AbstractAppActivity(), OnClickListener {
 
     private var defaultCar: CarMaster? = null
 
-    private val sDefaultCarInstanceState = this::class.java.canonicalName + ".sDefaultCarInstanceState"
+    /**
+     * デフォルトカー保存キー
+     */
+    private val sDefaultCarInstanceState = this::class.java.canonicalName!! + ".sDefaultCarInstanceState"
 
     /**
      * SDカードとやりとりするためのファイル名を取得する。
@@ -111,8 +85,17 @@ class CarListActivity : AbstractAppActivity(), OnClickListener {
 
         // 燃費記録追加画面を呼び出す
         button_addFuelRecord!!.setOnClickListener {
-            addMileage(defaultCarID, defaultCarName)
+            if (defaultCar == null) {
+                val logic = CarListLogic(getAppDb())
+                defaultCar = logic.findForDefault()
+            }
+
+            addMileage(defaultCar!!)
         }
+    }
+
+    override fun onStart() {
+        super.onStart()
 
         val carListLogic = CarListLogic(getAppDb())
         defaultCar = carListLogic.findForDefault()
@@ -149,7 +132,6 @@ class CarListActivity : AbstractAppActivity(), OnClickListener {
         // 別画面呼び出しのためのインテント宣言
         val configActivity = Intent(this, ConfigActivity::class.java) // 設定画面
         val addCarActivity = Intent(this, AddMyCarActivity::class.java) // 「クルマを追加」画面
-        val carListActivity = Intent(this, CarListActivity::class.java) // 「クルマリスト」画面
 
         when (item.itemId) {
             R.id.optionsmenu_closeAPP -> {
@@ -193,9 +175,6 @@ class CarListActivity : AbstractAppActivity(), OnClickListener {
      */
     override fun onPause() {
         super.onPause()
-
-        // CursorとDBが閉じていなければそれぞれを閉じる
-        closeDbAndCursorIfOpen()
     }
 
     /**
@@ -205,9 +184,6 @@ class CarListActivity : AbstractAppActivity(), OnClickListener {
      */
     override fun onDestroy() {
         super.onDestroy()
-
-        // CursorとDBが閉じていなければそれぞれを閉じる
-        closeDbAndCursorIfOpen()
     }
 
     /**
@@ -221,7 +197,7 @@ class CarListActivity : AbstractAppActivity(), OnClickListener {
         val carListLogic = CarListLogic(getAppDb())
 
         val carList = carListLogic.getCarList()
-        if (carList.size > 0) {
+        if (carList.isNotEmpty()) {
 
             // ListViewにデータを貼る
             val carListAdapter = CarListAdapter(this, R.layout.listviewelement_carlist, carList)
@@ -240,85 +216,15 @@ class CarListActivity : AbstractAppActivity(), OnClickListener {
             if (defaultCar != null) {
                 tv_label_value_defaultcar!!.text = defaultCar!!.carName
             }
+
+            if (!button_addFuelRecord!!.isEnabled) {
+                button_addFuelRecord!!.isEnabled = true
+            }
+
+        } else {
+            // 空の場合は、ボタンが押せるとクラッシュするためロックする
+            button_addFuelRecord!!.isEnabled = false
         }
-//
-//
-//
-//
-//        // 参照専用でDBを開く
-//        db = dbman.readableDatabase
-//
-//        // クルマリストとデフォルトカーの表示処理
-//        // クルマリストのArrayをつくる
-//        //   count()の結果が1レコード以上ないとAdapterが作成できないので、CAR_MASTERに１レコード以上あるかを調べ、
-//        //   あった場合のみAdapterをつくる
-//        if (dbman.hasCarRecords(db)) {
-//            // Adapterのもととなるレコードの取得
-//            cCarList = dbman.getCarList(db)
-//            Log.i("CAR_MASTER",
-//                    "Got " + cCarList!!.count.toString() + " records, including "
-//                            + cCarList!!.columnCount.toString() + " columns.")
-//            for (i in 0 until cCarList!!.columnCount) {
-//                Log.i("CAR_MASTER", "name of Column Index " + i.toString() + ":" + cCarList!!.getColumnName(i))
-//            }
-//
-//            // AdapterからListViewへ差し込むデータの整形
-//            val from = arrayOf("CAR_NAME", "CURRENT_FUEL_MILEAGE", "FUELMILEAGE_LABEL", "CURRENT_RUNNING_COST", "RUNNINGCOST_LABEL")
-//            val to = intArrayOf(R.id.tv_element_CarName, R.id.tv_value_FuelMileage, R.id.tv_unit_fuelMileage, R.id.tv_value_RunningCosts, R.id.tv_unit_runningCosts)
-//
-//            val sca = SimpleCursorAdapter(applicationContext,
-//                    R.layout.listviewelement_carlist, cCarList, from, to)
-//            listView_CarList.adapter = sca
-//
-//            // コンテキストメニュー表示を車クルマリストに対して登録をする
-//            registerForContextMenu(listView_CarList)
-//
-//            // 別画面呼び出し用に、デフォルト値を格納する
-//            defaultCarID = dbman.getDefaultCarId(db)
-//            defaultCarName = dbman.getDefaultCarName(db)
-//
-//            // デフォルトカーの名前を取得してセット
-//            tv_label_value_defaultcar.text = defaultCarName
-//
-//            // イベントリスナ（onItemClick）
-//            listView_CarList.onItemClickListener = AdapterView.OnItemClickListener { parent, v, position, id ->
-//                // とりあえず、LogCatに流して挙動を観察
-//                Log.d("onItemClick", "ListView item pressed.")
-//                Log.d("onItemClick", "parent = " + parent.toString())
-//                Log.d("onItemClick", "v = " + v.toString())
-//                Log.d("onItemClick", "position = " + position.toString())
-//                Log.d("onItemClick", "id = " + id.toString())
-//
-//                // 呼び出されたListViewの要素位置を取得する
-//                selectedRow = listView_CarList.getItemAtPosition(position) as Cursor
-//
-//                // カレント値を変数に格納
-//                currentCarID = selectedRow!!.getInt(selectedRow!!.getColumnIndex("_id"))
-//                currentCarName = selectedRow!!.getString(selectedRow!!.getColumnIndex("CAR_NAME"))
-//
-//                selectedRow!!.close()
-//
-//                // クルマの燃費記録一覧画面を呼び出す
-//                showMileageList(currentCarID, currentCarName)
-//            }
-//
-//        }
-    }
-
-    /**
-     * 「燃費記録を追加」ボタンを押すことで、デフォルトカーに燃費記録を追加する。
-     * @param v View型、クリックされたView
-     * @see android.view.View.OnClickListener.onClick
-     */
-    //@Override
-    override fun onClick(v: View) {
-        // デフォルトカーについての燃費記録画面を表示する
-        // とりあえず、LogCatに流して挙動を観察
-        Log.d("onClick", "Button pressed.")
-        Log.d("onClick", "v = " + v.toString())
-
-        // 燃費記録追加画面を呼び出す
-        addMileage(defaultCarID, defaultCarName)
     }
 
     /**
@@ -327,6 +233,8 @@ class CarListActivity : AbstractAppActivity(), OnClickListener {
      */
     override fun onContextItemSelected(item: MenuItem): Boolean {
 
+        val logic = CarListLogic(getAppDb())
+
         when (item.itemId) {
             R.id.ctxitem_add_mileage ->
                 // 燃費記録追加画面を呼び出す
@@ -334,13 +242,9 @@ class CarListActivity : AbstractAppActivity(), OnClickListener {
             R.id.ctxitem_delete_car ->
                 // クルマを削除する
                 deleteCar(currentCarID, currentCarName)
-            //		case R.id.ctxitem_edit_car_preference:
-            //			// クルマの設定を変更する
-            //			editCarPreference(currentCarID, currentCarName);
-            //			break;
             R.id.ctxitem_set_default_car ->
                 // デフォルトカーにする
-                changeAsDefault(currentCarID, currentCarName)
+                logic.changeDefault(currentCarID)
             R.id.ctxitem_show_mileage ->
                 // 燃費記録一覧を表示
                 showMileageList(currentCarID, currentCarName)
@@ -359,11 +263,8 @@ class CarListActivity : AbstractAppActivity(), OnClickListener {
      * @see android.app.Activity.onContextMenuClosed
      */
     override fun onContextMenuClosed(menu: Menu) {
-        // TODO 自動生成されたメソッド・スタブ
         super.onContextMenuClosed(menu)
 
-        // DBとCursorを閉じてActivityを再始動する
-        closeDbAndCursorIfOpen()
         onResume()
     }
 
@@ -380,24 +281,15 @@ class CarListActivity : AbstractAppActivity(), OnClickListener {
 
         // 呼び出されたListViewの要素位置を取得する
         val acmi = menuInfo as AdapterContextMenuInfo
-        selectedRow = listView_CarList!!.getItemAtPosition(acmi.position) as Cursor
+        val selectedCar = listView_CarList!!.adapter.getItem(acmi.position) as CarMaster
 
-        // カレント値を変数に格納
-        currentCarID = selectedRow!!.getInt(selectedRow!!.getColumnIndex("_id"))
-        currentCarName = selectedRow!!.getString(selectedRow!!.getColumnIndex("CAR_NAME"))
-
-        // LocCatに流して挙動を観察
-        Log.d("onCreateContextMenu", "ContextMenu created, v = " + v.id.toString())
-        Log.d("onCreateContextMenu", "row number = $currentCarID")
-        Log.d("onCreateContextMenu", "Car Name = " + currentCarName!!)
+        // カレント値を格納
+        currentCarID = selectedCar.carId
+        currentCarName = selectedCar.carName
 
         // XMLの記述に従い、コンテキストメニューを展開する
         menuInflater.inflate(R.menu.context_carlist, menu)
         menu.setHeaderTitle(getString(R.string.ctxmenutitle_carlist))
-
-        // Cursorを閉じる。
-        // ※副作用で、現在表示されているクルマリストが消える。
-        selectedRow!!.close()
     }
 
     /**
@@ -407,8 +299,6 @@ class CarListActivity : AbstractAppActivity(), OnClickListener {
      * @param carName String型、燃費リスト画面に引き渡すクルマのCAR_NAME値。
      */
     protected fun showMileageList(carId: Int, carName: String?) {
-        // 画面遷移の前に、DBとCursorを閉じる。
-        closeDbAndCursorIfOpen()
 
         Log.d(resources.toString(), "CAR_ID : " + carId.toString())
         Log.d(resources.toString(), "CAR_NAME : " + carName!!)
@@ -426,10 +316,7 @@ class CarListActivity : AbstractAppActivity(), OnClickListener {
      * @param carId int型、呼び出すクルマのCAR_ID
      * @param carName String型、呼び出すクルマのCAR_NAME
      */
-    protected fun addMileage(carId: Int, carName: String?) {
-        // 画面遷移の前に、DBとCursorを閉じる。
-        closeDbAndCursorIfOpen()
-
+    private fun addMileage(carId: Int, carName: String?) {
         // 取得したCAR_IDとCAR_NAMEを引数にセットしてstartActivity
         val i = Intent(applicationContext, FuelMileageAddActivity::class.java)
         i.putExtra("CAR_ID", carId)
@@ -437,25 +324,8 @@ class CarListActivity : AbstractAppActivity(), OnClickListener {
         startActivity(i)
     }
 
-    /**
-     * 選択したクルマをデフォルトに切り替える。
-     * 再描画はonContextMenuClosed(int)の中に定義しているため、特にここでは何もしていない。
-     * @param carId int型、デフォルトに切り替えるクルマのCAR_ID
-     * @param carName String型、デフォルトに切り替えるクルマのCAR_NAME
-     */
-    protected fun changeAsDefault(carId: Int, carName: String?) {
-        val iRet = dbman.changeDefaultCar(db, carId)
-
-        Log.d("changeAsDefault", iRet.toString() + " row(s) updated.")
-        Log.d("changeAsDefault", "Set as default car, CAR_ID = " + carId.toString())
-        Log.d("changeAsDefault", "CAR_NAME = " + carName!!)
-    }
-
-    /**
-     * クルマの設定を変更する。
-     */
-    protected fun editCarPreference(carId: Int, carName: String) {
-
+    private fun addMileage(carMaster: CarMaster) {
+        addMileage(carMaster.carId, carMaster.carName)
     }
 
     /**
@@ -467,88 +337,43 @@ class CarListActivity : AbstractAppActivity(), OnClickListener {
      * @see android.database.sqlite.SQLiteDatabase.delete
      */
     protected fun deleteCar(carId: Int, carName: String?) {
-        // TODO 削除確認を行うポップアップダイアログを表示させる
-        val adbuilder = AlertDialog.Builder(this)
-        adbuilder.setTitle(carName)
-        adbuilder.setMessage(getString(R.string.adbuilder_confirm_deletecar))
-        // [back]キーでキャンセルができないようにする
-        adbuilder.setCancelable(false)
+        // 削除確認を行うポップアップダイアログを表示させる
+        val callback: MsgDialog.OnDialogButtonClickCallback = object : MsgDialog.OnDialogButtonClickCallback {
+            override fun onPositiveClick(msgResId: Int) {
+                val logic = CarListLogic(getAppDb())
+                logic.deleteCarMileage(carId)
 
-        // 「はい」ボタンの処理
-        adbuilder.setPositiveButton(android.R.string.yes) { dialog, which ->
-            // TODO 自動生成されたメソッド・スタブ
-            var result: Int
+                val line = carName + getString(R.string.adbuilder_toast_deleterecord)
+                Toast.makeText(applicationContext, line, Toast.LENGTH_LONG).show()
 
-            // 削除前に車の名前を取得しておく
-            val carname = dbman.getCarNameById(db, carId)
-
-            // クルマのレコードを削除する
-            result = dbman.deleteCarById(db, carId)
-            Log.d("deleteCar", "car record deleted, CAR_ID = " + carId.toString())
-            Log.d("deleteCar", "car record deleted, CAR_NAME = " + carName!!)
-            Log.d("deleteCar", "deleted records = " + result.toString())
-
-            // TODO 給油記録とランニングコスト記録を削除するか否かの
-            //      確認ダイアログを表示させる
-            // 給油記録を削除
-            result = dbman.deleteLubsByCarId(db, carId)
-            Log.d("deleteCar", "lub record deleted, CAR_ID = " + carId.toString())
-            Log.d("deleteCar", "lub record deleted, CAR_NAME = $carName")
-            Log.d("deleteCar", "deleted records = " + result.toString())
-
-            // ランニングコスト記録を削除
-            result = dbman.deleteCostsByCarId(db, carId)
-            Log.d("deleteCar", "costs record deleted, CAR_ID = " + carId.toString())
-            Log.d("deleteCar", "costs record deleted, CAR_NAME = $carName")
-            Log.d("deleteCar", "deleted records = " + result.toString())
-
-            // DBを再編成する
-            dbman.reorgDb(db)
-
-            // レコードを消したというトーストを表示する。
-            val line = carname + getString(R.string.adbuilder_toast_deleterecord)
-            Toast.makeText(applicationContext, line, Toast.LENGTH_LONG).show()
-
-            // DBとCursorを閉じてActivityを再始動する
-            closeDbAndCursorIfOpen()
-            onResume()
-        }
-
-        // 「キャンセル」ボタンの処理
-        //   noなので「いいえ」かと思ったのだが....。
-        //   何もせずに終了する。
-        adbuilder.setNegativeButton(android.R.string.no) { dialog, which ->
-            // TODO 自動生成されたメソッド・スタブ
-        }
-
-        // AlertDialogを表示する
-        adbuilder.show()
-    }
-
-    /**
-     * CursorとDBが開いていたら閉じる。
-     * 引数なし、グローバル変数を使用。エレガントではないのはわかってはいるが。
-     */
-    protected fun closeDbAndCursorIfOpen() {
-        if (db.isOpen) {
-            if (dbman.hasCarRecords(db)) {
-                if (cCarList!!.isClosed != true) {
-                    cCarList!!.close()
-                }
             }
-            Log.d(application.toString(), "SQLite database is closing.")
-            dbman.close()
+
+            override fun onNegativeClick(msgResId: Int) {
+                // nothing to do
+            }
+
+            override fun onMiddleClick(msgResId: Int) {
+                // nothing to do
+            }
         }
 
-        //		if (selectedRow.isClosed() != true) {
-        //			selectedRow.close();
-        //		}
+        val cond = MsgDialogCondition(R.string.adbuilder_confirm_deletecar)
+        cond.titleStr = carName
+        cond.cancelable = false
+        cond.positiveButtonMsgResId = android.R.string.yes
+        cond.negativeButtonMsgResId = android.R.string.no
+        cond.needNegativeButton = true
+
+        val d: MsgDialog = MsgDialog.getInstance(cond, callback)
+        d.show(supportFragmentManager, MsgDialog.DIALOG_TAG)
     }
 
     /**
      * 「SDカードへのエクスポート」メニューを作成する。
      */
     private fun createExportMenu() {
+        // TODO エクスポート確認ダイアログを表示する処理を書く
+
         Log.d("createEnportMenu", "called export method.")
         val adbuildr = AlertDialog.Builder(this)
 
@@ -579,6 +404,8 @@ class CarListActivity : AbstractAppActivity(), OnClickListener {
      */
     private fun createImportMenu() {
         Log.d("createEnportMenu", "called export method.")
+
+        // TODO インポート確認ダイアログを表示する処理を書く
 
         val adbuilder = AlertDialog.Builder(this)
 
@@ -616,60 +443,62 @@ class CarListActivity : AbstractAppActivity(), OnClickListener {
      */
     private fun writeAllData(fullpath: String, targetTableName: String, append: Boolean) {
 
-        if (append == false) {
-            writeDBVersionHeader(fullpath, db.version)
-        }
+        // TODO ファイル出力処理を再実装する
 
-        try {
-            val target = File(fullpath)
-            val targetTable = dbman.getWholeRecords(targetTableName, db)
-
-            val maxColumn = targetTable.columnCount
-            var headerWords = arrayOfNulls<String>(maxColumn)
-            headerWords = targetTable.columnNames.clone()
-
-            val bw = BufferedWriter(FileWriter(target, true))
-            val sb = StringBuilder()
-
-            // 最初にヘッダ行をかく
-            bw.write("Table name : $targetTableName")
-            bw.newLine()
-
-            for (str in headerWords) {
-                sb.append(str).append(",")
-            }
-            val header = sb.append(headerWords[maxColumn - 1]).toString()
-            Log.d("writeToSD", "header string = $header")
-
-            bw.write(header)
-            bw.newLine()
-
-            if (targetTable.isFirst == false) {
-                targetTable.moveToFirst()
-            }
-
-            while (targetTable.isAfterLast == false) {
-                val sbRow = StringBuilder()
-
-                for (i in 0 until maxColumn - 1) {
-                    sbRow.append(targetTable.getString(i)).append(",")
-                }
-                val rowLine = sbRow.append(targetTable.getString(maxColumn - 1)).toString()
-
-                bw.write(rowLine)
-                bw.newLine()
-
-                targetTable.moveToNext()
-            }
-
-            bw.newLine()
-            bw.close()
-            if (targetTable.isClosed == false) targetTable.close()
-
-        } catch (e: Exception) {
-            // TODO 自動生成された catch ブロック
-            e.printStackTrace()
-        }
+//        if (append == false) {
+//            writeDBVersionHeader(fullpath, db.version)
+//        }
+//
+//        try {
+//            val target = File(fullpath)
+//            val targetTable = dbman.getWholeRecords(targetTableName, db)
+//
+//            val maxColumn = targetTable.columnCount
+//            var headerWords = arrayOfNulls<String>(maxColumn)
+//            headerWords = targetTable.columnNames.clone()
+//
+//            val bw = BufferedWriter(FileWriter(target, true))
+//            val sb = StringBuilder()
+//
+//            // 最初にヘッダ行をかく
+//            bw.write("Table name : $targetTableName")
+//            bw.newLine()
+//
+//            for (str in headerWords) {
+//                sb.append(str).append(",")
+//            }
+//            val header = sb.append(headerWords[maxColumn - 1]).toString()
+//            Log.d("writeToSD", "header string = $header")
+//
+//            bw.write(header)
+//            bw.newLine()
+//
+//            if (targetTable.isFirst == false) {
+//                targetTable.moveToFirst()
+//            }
+//
+//            while (targetTable.isAfterLast == false) {
+//                val sbRow = StringBuilder()
+//
+//                for (i in 0 until maxColumn - 1) {
+//                    sbRow.append(targetTable.getString(i)).append(",")
+//                }
+//                val rowLine = sbRow.append(targetTable.getString(maxColumn - 1)).toString()
+//
+//                bw.write(rowLine)
+//                bw.newLine()
+//
+//                targetTable.moveToNext()
+//            }
+//
+//            bw.newLine()
+//            bw.close()
+//            if (targetTable.isClosed == false) targetTable.close()
+//
+//        } catch (e: Exception) {
+//            // TODO 自動生成された catch ブロック
+//            e.printStackTrace()
+//        }
 
     }
 
@@ -705,10 +534,6 @@ class CarListActivity : AbstractAppActivity(), OnClickListener {
             e.printStackTrace()
         }
 
-    }
-
-    companion object {
-        lateinit var db: SQLiteDatabase
     }
 
     override fun onSaveInstanceState(outState: Bundle?) {
