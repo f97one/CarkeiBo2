@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:id="@+id/RelativeLayout1"
-    android:layout_width="fill_parent"
-    android:layout_height="fill_parent"
-    android:orientation="vertical" >
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:layout_margin="8dp">
 
     <TextView
         android:id="@+id/TextView1"
@@ -12,7 +12,8 @@
         android:layout_alignParentLeft="true"
         android:layout_alignParentTop="true"
         android:text="@string/label_carName"
-        android:textSize="10pt" />
+        android:layout_alignParentStart="true"
+        android:textAppearance="@style/Base.TextAppearance.AppCompat.Medium" />
 
     <AutoCompleteTextView
         android:id="@+id/textview_addCarName"
@@ -21,7 +22,10 @@
         android:layout_alignParentLeft="true"
         android:layout_below="@+id/TextView1"
         android:hint="@string/label_hint_inputYourCarName"
-        android:singleLine="true" >
+        android:layout_alignParentStart="true"
+        android:layout_margin="8dp"
+        android:singleLine="true"
+        android:textAppearance="@style/Base.TextAppearance.AppCompat.Large">
     </AutoCompleteTextView>
 
     <CheckBox
@@ -30,89 +34,123 @@
         android:layout_height="wrap_content"
         android:layout_alignParentLeft="true"
         android:layout_below="@+id/textview_addCarName"
+        android:layout_alignParentStart="true"
+        android:layout_marginTop="8dp"
+        android:layout_marginBottom="8dp"
         android:text="@string/label_cb_setdfault" />
 
-    <TextView
-        android:id="@+id/textView1"
-        android:layout_width="wrap_content"
+    <LinearLayout
+        android:id="@+id/price_unit_layout"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_alignBaseline="@+id/spinner_priceUnit"
-        android:layout_alignParentLeft="true"
+        android:layout_marginTop="8dp"
         android:layout_below="@+id/checkBox_SetDefault"
-        android:layout_gravity="center_vertical"
-        android:layout_marginTop="20dp"
-        android:text="@string/label_spinner_price"
-        android:textSize="8pt" />
+        android:layout_marginBottom="8dp"
+        android:orientation="horizontal">
 
-    <Spinner
-        android:id="@+id/spinner_priceUnit"
-        android:layout_width="wrap_content"
+        <TextView
+            android:id="@+id/textView1"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_gravity="center_vertical"
+            android:layout_weight="1"
+            android:text="@string/label_spinner_price"
+            android:textAppearance="@style/Base.TextAppearance.AppCompat.Medium" />
+
+        <Spinner
+            android:id="@+id/spinner_priceUnit"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_gravity="center_vertical"
+            android:layout_weight="1"
+            android:entries="@array/priceUnit" />
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/distance_unit_layout"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_alignParentRight="true"
-        android:layout_below="@+id/checkBox_SetDefault"
-        android:layout_gravity="right|center_vertical"
-        android:layout_toRightOf="@+id/textView1" android:entries="@array/priceUnit">
+        android:layout_below="@+id/price_unit_layout"
+        android:layout_marginTop="8dp"
+        android:layout_marginBottom="8dp"
+        android:orientation="horizontal">
 
-        <!-- Preview: listitem=@android:layout/simple_spinner_item -->
-    </Spinner>
+        <TextView
+            android:id="@+id/textView2"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_gravity="center_vertical"
+            android:layout_weight="1"
+            android:text="@string/label_spinner_distance"
+            android:textAppearance="@style/Base.TextAppearance.AppCompat.Medium"
+            />
 
-    <TextView
-        android:id="@+id/textView2"
-        android:layout_width="wrap_content"
+        <Spinner
+            android:id="@+id/spinner_distanceUnit"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_gravity="center_vertical"
+            android:layout_weight="1"
+            android:entries="@array/distanceUnit"/>
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/volume_unit_layout"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_alignBaseline="@+id/spinner_distanceUnit"
-        android:layout_alignParentLeft="true"
-        android:layout_below="@+id/spinner_priceUnit"
-        android:layout_gravity="center_vertical"
-        android:layout_marginTop="20dp"
-        android:text="@string/label_spinner_distance"
-        android:textSize="8pt" />
+        android:layout_below="@+id/distance_unit_layout"
+        android:layout_marginTop="8dp"
+        android:layout_marginBottom="8dp"
+        android:orientation="horizontal">
 
-    <Spinner
-        android:id="@+id/spinner_distanceUnit"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignParentRight="true"
-        android:layout_below="@+id/spinner_priceUnit"
-        android:layout_gravity="right|center_vertical"
-        android:layout_toRightOf="@+id/textView2" android:entries="@array/distanceUnit"/>
+        <TextView
+            android:id="@+id/textView3"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_vertical"
+            android:layout_weight="1"
+            android:text="@string/label_spinner_volume"
+            android:textAppearance="@style/Base.TextAppearance.AppCompat.Medium"
+            />
 
-    <TextView
-        android:id="@+id/textView3"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignBaseline="@+id/spinner_volumeUnit"
-        android:layout_alignParentLeft="true"
-        android:layout_below="@+id/spinner_distanceUnit"
-        android:layout_gravity="center_vertical"
-        android:layout_marginTop="20dp"
-        android:text="@string/label_spinner_volume"
-        android:textSize="8pt" />
+        <Spinner
+            android:id="@+id/spinner_volumeUnit"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_gravity="center_vertical"
+            android:layout_weight="1"
+            android:entries="@array/volumeUnit"/>
 
-    <Spinner
-        android:id="@+id/spinner_volumeUnit"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignParentRight="true"
-        android:layout_below="@+id/spinner_distanceUnit"
-        android:layout_gravity="right|center_vertical"
-        android:layout_toRightOf="@+id/textView3" android:entries="@array/volumeUnit"/>
+    </LinearLayout>
 
-    <Button
-        android:id="@+id/button_addCar"
-        android:layout_width="wrap_content"
+    <LinearLayout
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_alignParentLeft="true"
-        android:onClick="onClickAddCar"
-        android:text="@string/label_btn_addCar" android:layout_alignParentBottom="true"/>
+        android:layout_alignParentBottom="true"
+        android:orientation="horizontal">
 
-    <Button
-        android:id="@+id/button_cancel_addCar"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignBaseline="@+id/button_addCar"
-        android:layout_alignTop="@+id/button_addCar"
-        android:onClick="onClickCancel"
-        android:text="@string/label_btn_cancel" android:layout_alignParentRight="true" android:layout_alignParentBottom="true"/>
+        <Button
+            android:id="@+id/button_addCar"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginEnd="8dp"
+            android:layout_marginRight="8dp"
+            android:layout_weight="1"
+            android:onClick="onClickAddCar"
+            android:text="@string/label_btn_addCar" />
+
+        <Button
+            android:id="@+id/button_cancel_addCar"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="8dp"
+            android:layout_marginLeft="8dp"
+            android:layout_weight="1"
+            android:onClick="onClickCancel"
+            android:text="@string/label_btn_cancel" />
+
+    </LinearLayout>
 
 </RelativeLayout>
