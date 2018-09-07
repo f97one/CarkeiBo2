@@ -1,23 +1,18 @@
 /**
  *
  */
-package net.formula97.andorid.car_kei_bo
+package net.formula97.andorid.car_kei_bo.activity
 
 import android.app.AlertDialog
 import android.content.Intent
-import android.database.Cursor
-import android.database.sqlite.SQLiteDatabase
 import android.os.Bundle
 import android.os.Environment
 import android.util.Log
 import android.view.*
 import android.view.ContextMenu.ContextMenuInfo
-import android.view.View.OnClickListener
 import android.widget.*
 import android.widget.AdapterView.AdapterContextMenuInfo
-import net.formula97.andorid.car_kei_bo.activity.AbstractAppActivity
-import net.formula97.andorid.car_kei_bo.activity.MsgDialog
-import net.formula97.andorid.car_kei_bo.activity.MsgDialogCondition
+import net.formula97.andorid.car_kei_bo.*
 import net.formula97.andorid.car_kei_bo.data.CarMaster
 import net.formula97.andorid.car_kei_bo.logic.CarListLogic
 import net.formula97.andorid.car_kei_bo.view.adapter.CarListAdapter

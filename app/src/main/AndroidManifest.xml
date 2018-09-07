@@ -13,7 +13,7 @@
         android:name="net.formula97.andorid.car_kei_bo.TheApp"
         android:theme="@style/Theme.AppCompat">
 
-        <activity android:name=".CarListActivity">
+        <activity android:name=".activity.CarListActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
                 <category android:name="android.intent.category.LAUNCHER" />
