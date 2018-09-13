@@ -16,9 +16,9 @@ class CarListLogic(appDatabase: AppDatabase) : BaseAppLogic(appDatabase) {
         val items = appDatabase.carMasterDao().findAll()
 
         return if (orderByDesc) {
-            items.sortedWith(Comparator { o1, o2 -> o2.carId.compareTo(o1.carId) })
+            items.sortedWith(Comparator { o1, o2 -> o2.carId!!.compareTo(o1.carId!!) })
         } else {
-            items.sortedWith(Comparator { o1, o2 -> o1.carId.compareTo(o2.carId) })
+            items.sortedWith(Comparator { o1, o2 -> o1.carId!!.compareTo(o2.carId!!) })
         }
     }
 
