@@ -67,4 +67,17 @@ class CarListLogic(appDatabase: AppDatabase) : BaseAppLogic(appDatabase) {
             carMasterDao.deleteItem(carMaster)
         }
     }
+
+    @Transaction
+    fun addNewCar(entity: CarMaster) {
+        // TODO コルーチンで処理を書く
+
+        val dao = appDatabase.carMasterDao()
+
+        if (entity.defaultFlag) {
+            dao.decreaseDefault()
+        }
+        dao.addItem(entity)
+
+    }
 }

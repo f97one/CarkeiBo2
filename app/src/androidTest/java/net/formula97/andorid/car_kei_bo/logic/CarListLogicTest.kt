@@ -14,6 +14,7 @@ import org.junit.Before
 import org.junit.Test
 import org.junit.runner.RunWith
 import java.util.*
+import kotlin.math.log
 
 @RunWith(AndroidJUnit4::class)
 class CarListLogicTest {
@@ -255,5 +256,50 @@ class CarListLogicTest {
 
         val costsMasters = costsMasterDao.findAll()
         assertThat(costsMasters.size, `is`(1))
+    }
+
+    /**
+     * デフォルトフラグ付きのクルマを追加できる
+     */
+    @Test
+    fun textN0010() {
+        val f3 = CarMaster(
+                carId = 2, carName = "クルマ3", currentFuelMileage = 144.0, currentRunningCost = 12.8,
+                defaultFlag = true, distanceUnit = "km", fuelMileageLabel = "km/l", priceUnit = "円",
+                runningCostLabel = "円/km", volumeUnit = "l"
+        )
+
+        val logic = CarListLogic(appDb)
+        logic.addNewCar(f3)
+
+        val carMasterDao = appDb.carMasterDao()
+
+        val carMasters = carMasterDao.findAll()
+        assertThat(carMasters.size, `is`(3))
+        val defaultCar = carMasters.find { r -> r.defaultFlag }
+        assertThat(defaultCar!!.carId, `is`(2))
+
+    }
+
+    /**
+     * デフォルトフラグなしのクルマを追加できる
+     */
+    @Test
+    fun testN0011() {
+        val f3 = CarMaster(
+                carId = 2, carName = "クルマ3", currentFuelMileage = 144.0, currentRunningCost = 12.8,
+                defaultFlag = false, distanceUnit = "km", fuelMileageLabel = "km/l", priceUnit = "円",
+                runningCostLabel = "円/km", volumeUnit = "l"
+        )
+
+        val logic = CarListLogic(appDb)
+        logic.addNewCar(f3)
+
+        val carMasterDao = appDb.carMasterDao()
+
+        val carMasters = carMasterDao.findAll()
+        assertThat(carMasters.size, `is`(3))
+        val defaultCar = carMasters.find { r -> r.defaultFlag }
+        assertThat(defaultCar!!.carId, `is`(3))
     }
 }
