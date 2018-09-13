@@ -16,7 +16,7 @@ data class LubMaster(
          */
         @PrimaryKey(autoGenerate = true)
         @ColumnInfo(name = "RECORD_ID")
-        var recordId: Int,
+        var recordId: Int?,
         /**
          * 作成された日時
          */

@@ -13,7 +13,7 @@ import java.util.*
 data class CostsMaster(
         @PrimaryKey(autoGenerate = true)
         @ColumnInfo(name = "RECORD_ID")
-        var recordId: Int,
+        var recordId: Int?,
         @ColumnInfo(name = "CAR_ID")
         var carId: Int,
         @ColumnInfo(name = "REFUEL_DATE")

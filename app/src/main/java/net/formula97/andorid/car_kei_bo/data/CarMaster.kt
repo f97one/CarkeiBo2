@@ -9,7 +9,7 @@ import java.io.Serializable
 data class CarMaster(
         @PrimaryKey(autoGenerate = true)
         @ColumnInfo(name = "CAR_ID")
-        var carId: Int,
+        var carId: Int?,
         @ColumnInfo(name = "CAR_NAME")
         var carName: String,
         @ColumnInfo(name = "DEFAULT_FLAG")
