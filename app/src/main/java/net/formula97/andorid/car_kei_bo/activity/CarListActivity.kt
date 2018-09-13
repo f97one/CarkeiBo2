@@ -205,7 +205,7 @@ class CarListActivity : AbstractAppActivity() {
                 val cla = lv.adapter as CarListAdapter
                 val posItem = cla.getItem(position)
 
-                showMileageList(posItem.carId, posItem.carName)
+                showMileageList(posItem.carId!!, posItem.carName)
             }
 
             if (defaultCar != null) {
@@ -279,7 +279,7 @@ class CarListActivity : AbstractAppActivity() {
         val selectedCar = listView_CarList!!.adapter.getItem(acmi.position) as CarMaster
 
         // カレント値を格納
-        currentCarID = selectedCar.carId
+        currentCarID = selectedCar.carId!!
         currentCarName = selectedCar.carName
 
         // XMLの記述に従い、コンテキストメニューを展開する
@@ -320,7 +320,7 @@ class CarListActivity : AbstractAppActivity() {
     }
 
     private fun addMileage(carMaster: CarMaster) {
-        addMileage(carMaster.carId, carMaster.carName)
+        addMileage(carMaster.carId!!, carMaster.carName)
     }
 
     /**
